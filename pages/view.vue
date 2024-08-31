@@ -44,7 +44,7 @@ const { $db } = useNuxtApp();
 
 onMounted(() => {
   const today = new Date();
-  date.value = today.toISOString().slice(0, 10);
+  date.value = today.toString().slice(0, 10);
 
   nameOfTheDay.value = [
     "sunday",

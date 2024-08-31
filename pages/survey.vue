@@ -9,7 +9,14 @@
 
     <br />
 
-    <div v-if="nameOfTheDay === '월' || nameOfTheDay === '화' || nameOfTheDay === '목' || nameOfTheDay === '금'">
+    <div
+      v-if="
+        nameOfTheDay === '월' ||
+        nameOfTheDay === '화' ||
+        nameOfTheDay === '목' ||
+        nameOfTheDay === '금'
+      "
+    >
       <v-card elevation="0">
         <div>
           <v-card-title class="text-center">
@@ -133,8 +140,6 @@ const suggestion = ref("");
 
 const dialog = ref(false);
 
-const totalRating = ref([].fill(0, 0, todayMenu.value.split("\n").length));
-
 const { $db } = useNuxtApp();
 
 const reset = () => {
@@ -151,8 +156,8 @@ onMounted(() => {
     today.getDate() - ((today.getDay() + 6) % 7) + 1
   );
 
-  date.value = today.toISOString().slice(0, 10);
-  theMondayDateBefore.value = bef.toISOString().slice(0, 10);
+  date.value = formatDate(today).slice(0, 10);
+  theMondayDateBefore.value = formatDate(bef).slice(0, 10);
   nameOfTheDay.value = ["일", "월", "화", "수", "목", "금", "토"][
     today.getDay()
   ];

@@ -75,30 +75,30 @@ onMounted(() => {
     today.getDate() + ((2 + 7 - today.getDay()) % 7)
   );
 
-  date.value.monday = nextMonday.toISOString().slice(0, 10);
-  date.value.tuesday = new Date(
-    nextMonday.getFullYear(),
-    nextMonday.getMonth(),
-    nextMonday.getDate() + 1
-  )
-    .toISOString()
-    .slice(0, 10);
+  date.value.monday = formatDate(nextMonday).slice(0, 10);
+  date.value.tuesday = formatDate(
+    new Date(
+      nextMonday.getFullYear(),
+      nextMonday.getMonth(),
+      nextMonday.getDate() + 1
+    )
+  ).slice(0, 10);
 
-  date.value.thursday = new Date(
-    nextMonday.getFullYear(),
-    nextMonday.getMonth(),
-    nextMonday.getDate() + 3
-  )
-    .toISOString()
-    .slice(0, 10);
+  date.value.thursday = formatDate(
+    new Date(
+      nextMonday.getFullYear(),
+      nextMonday.getMonth(),
+      nextMonday.getDate() + 3
+    )
+  ).slice(0, 10);
 
-  date.value.friday = new Date(
-    nextMonday.getFullYear(),
-    nextMonday.getMonth(),
-    nextMonday.getDate() + 4
-  )
-    .toISOString()
-    .slice(0, 10);
+  date.value.friday = formatDate(
+    new Date(
+      nextMonday.getFullYear(),
+      nextMonday.getMonth(),
+      nextMonday.getDate() + 4
+    )
+  ).slice(0, 10);
 
   refresh();
 });
