@@ -8,10 +8,10 @@
     <v-card
       elevation="0"
       v-if="
-        nameOfTheDay === '월' ||
-        nameOfTheDay === '화' ||
-        nameOfTheDay === '목' ||
-        nameOfTheDay === '금'
+        nameOfTheDay === 'monday' ||
+        nameOfTheDay === 'tuesday' ||
+        nameOfTheDay === 'thursday' ||
+        nameOfTheDay === 'friday'
       "
     >
       <v-card-title class="text-center">오늘 메뉴</v-card-title>
@@ -43,8 +43,8 @@ const nameOfTheDay = ref("");
 const { $db } = useNuxtApp();
 
 onMounted(() => {
-  const today = new Date();
-  date.value = today.toString().slice(0, 10);
+  const today = new Date("2024-09-02");
+  date.value = formatDate(today).slice(0, 10);
 
   nameOfTheDay.value = [
     "sunday",
