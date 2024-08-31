@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="mt-4">데이터 조회하기</h1>
+    <h1 class="mt-4">오늘의 평가 보기</h1>
     <p>오늘 날짜: {{ date }}</p>
 
     <br />
