@@ -149,7 +149,7 @@ const reset = () => {
 };
 
 onMounted(() => {
-  const today = new Date("2024-09-02");
+  const today = new Date();
   const bef = getTheLastMonday(today)
 
   date.value = formatDate(today).slice(0, 10);

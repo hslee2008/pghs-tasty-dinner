@@ -43,7 +43,7 @@ const nameOfTheDay = ref("");
 const { $db } = useNuxtApp();
 
 onMounted(() => {
-  const today = new Date("2024-09-02");
+  const today = new Date();
   date.value = formatDate(today).slice(0, 10);
 
   nameOfTheDay.value = [
