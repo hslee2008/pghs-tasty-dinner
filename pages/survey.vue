@@ -9,94 +9,104 @@
 
     <br />
 
-    <v-card elevation="0">
-      <div>
-        <v-card-title class="text-center">
-          오늘 석식은 몇 점? ({{ today }}점)
-        </v-card-title>
-        <div class="d-flex justify-center">
-          <v-rating
-            v-model="today"
-            :length="5"
-            :size="40"
-            active-color="green-darken-2"
-            class="px-4"
-          />
+    <div v-if="nameOfTheDay === 'monday' || nameOfTheDay === 'tuesday' || nameOfTheDay === 'thursday' || nameOfTheDay === 'friday'">
+      <v-card elevation="0">
+        <div>
+          <v-card-title class="text-center">
+            오늘 석식은 몇 점? ({{ today }}점)
+          </v-card-title>
+          <div class="d-flex justify-center">
+            <v-rating
+              v-model="today"
+              :length="5"
+              :size="40"
+              active-color="green-darken-2"
+              class="px-4"
+            />
+          </div>
         </div>
-      </div>
 
-      <br />
-      <v-divider />
-      <br />
+        <br />
+        <v-divider />
+        <br />
 
-      <v-card-title>메뉴별 만족도를 평가해주세요</v-card-title>
-      <div v-for="(menu, i) in todayMenu.split('\n')" :key="menu">
-        <v-card-text class="text-center">
-          {{ menu }} ({{ rated[i] }}점)
-        </v-card-text>
+        <v-card-title>메뉴별 만족도를 평가해주세요</v-card-title>
+        <div v-for="(menu, i) in todayMenu.split('\n')" :key="menu">
+          <v-card-text class="text-center">
+            {{ menu }} ({{ rated[i] }}점)
+          </v-card-text>
+
+          <div class="d-flex justify-center">
+            <v-rating
+              v-model="rated[i]"
+              :length="5"
+              :size="40"
+              active-color="green-darken-2"
+              class="px-4"
+            />
+          </div>
+        </div>
+
+        <br />
+        <v-divider />
+        <br />
+
+        <div>
+          <v-card-title class="text-center">추천 메뉴</v-card-title>
+          <v-textarea
+            v-model="suggestion"
+            placeholder="먹고 싶은 메뉴가 있으시면 적어주세요"
+            variant="outlined"
+            rows="3"
+          ></v-textarea>
+        </div>
+
+        <br />
 
         <div class="d-flex justify-center">
-          <v-rating
-            v-model="rated[i]"
-            :length="5"
-            :size="40"
-            active-color="green-darken-2"
-            class="px-4"
-          />
+          <v-btn
+            color="primary"
+            block
+            @click="submit"
+            :disabled="
+              !suggestion ||
+              rated.includes(0) ||
+              rated.length < todayMenu.split('\n').length ||
+              today === 0 ||
+              todayMenu === ''
+            "
+          >
+            제출하기
+          </v-btn>
         </div>
-      </div>
 
-      <br />
-      <v-divider />
-      <br />
-
-      <div>
-        <v-card-title class="text-center">추천 메뉴</v-card-title>
-        <v-textarea
-          v-model="suggestion"
-          placeholder="먹고 싶은 메뉴가 있으시면 적어주세요"
-          variant="outlined"
-          rows="3"
-        ></v-textarea>
-      </div>
-
-      <br />
-
-      <div class="d-flex justify-center">
-        <v-btn
-          color="primary"
-          block
-          @click="submit"
-          :disabled="
-            !suggestion ||
-            rated.includes(0) ||
-            rated.length < todayMenu.split('\n').length ||
-            today === 0 ||
-            todayMenu === ''
-          "
-        >
-          제출하기
-        </v-btn>
-      </div>
-
-      <br />
-      <br />
-    </v-card>
-
-    <v-dialog v-model="dialog" max-width="290">
-      <v-card>
-        <v-card-title class="text-center">제출 완료</v-card-title>
-        <v-card-text
-          >다른 사람의 의견이 궁금하십니까?
-          <NuxtLink to="/view" style="color: #6298d4">결과 보기</NuxtLink>를 누르세요</v-card-text
-        >
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="dialog = false">결과 보기</v-btn>
-          <v-btn color="primary" text @click="closeDialog">확인</v-btn>
-        </v-card-actions>
+        <br />
+        <br />
       </v-card>
-    </v-dialog>
+
+      <v-dialog v-model="dialog" max-width="290">
+        <v-card>
+          <v-card-title class="text-center">제출 완료</v-card-title>
+          <v-card-text
+            >다른 사람의 의견이 궁금하십니까?
+            <NuxtLink to="/view" style="color: #6298d4">결과 보기</NuxtLink>를
+            누르세요</v-card-text
+          >
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click="dialog = false"
+              >결과 보기</v-btn
+            >
+            <v-btn color="primary" text @click="closeDialog">확인</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+    <div v-else>
+      <v-card elevation="0">
+        <v-card-title class="text-center">오늘은 석식이 없습니다</v-card-title>
+      </v-card>
+    </div>
   </div>
 </template>
 
@@ -134,7 +144,7 @@ const reset = () => {
 };
 
 onMounted(() => {
-  const today = new Date("2024-09-02");
+  const today = new Date();
   const bef = new Date(
     today.getFullYear(),
     today.getMonth(),
