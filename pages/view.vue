@@ -5,6 +5,10 @@
 
     <br />
 
+    <p>{{ people }}명 참여</p>
+
+    <br />
+
     <v-card
       elevation="0"
       v-if="
@@ -39,6 +43,7 @@ const date = ref("");
 const menu = ref([]);
 const total = ref([]);
 const nameOfTheDay = ref("");
+const people = ref(0);
 
 const { $db } = useNuxtApp();
 
@@ -67,6 +72,13 @@ onMounted(() => {
   onValue(totalRef, (snapshot) => {
     if (snapshot.exists()) {
       total.value = snapshot.val();
+    }
+  });
+
+  const peopleRef = dbRef($db, `survey/${date.value}/people`);
+  onValue(peopleRef, (snapshot) => {
+    if (snapshot.exists()) {
+      people.value = snapshot.val();
     }
   });
 });

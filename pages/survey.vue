@@ -101,9 +101,6 @@
           >
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="dialog = false"
-              >결과 보기</v-btn
-            >
             <v-btn color="primary" text @click="closeDialog">확인</v-btn>
           </v-card-actions>
         </v-card>
@@ -150,8 +147,7 @@ const reset = () => {
 
 onMounted(() => {
   const today = new Date();
-  const bef = getTheLastMonday(today)
-
+  const bef = getTheLastMonday(today);
 
   date.value = formatDate(today).slice(0, 10);
   theMondayDateBefore.value = formatDate(bef).slice(0, 10);
@@ -194,6 +190,15 @@ const submit = () => {
       set(surveyRef, totalRating);
     } else {
       set(surveyRef, rated.value);
+    }
+  });
+
+  const peopleRef = dbRef($db, `survey/${date.value}/people`);
+  get(peopleRef).then((snapshot) => {
+    if (snapshot.exists()) {
+      set(peopleRef, snapshot.val() + 1);
+    } else {
+      set(peopleRef, 1);
     }
   });
 };
