@@ -1,9 +1,20 @@
 export default function getTheLastMonday(date) {
-  if (date.getDay() === 1) return date;
-  if (date.getDay() === 2) return new Date(date.setDate(date.getDate() - 1));
-  if (date.getDay() === 3) return new Date(date.setDate(date.getDate() - 2));
-  if (date.getDay() === 4) return new Date(date.setDate(date.getDate() - 3));
-  if (date.getDay() === 5) return new Date(date.setDate(date.getDate() - 4));
-  if (date.getDay() === 6) return new Date(date.setDate(date.getDate() - 5));
-  if (date.getDay() === 0) return new Date(date.setDate(date.getDate() - 6));
+  const newDate = new Date(date); // Create a copy of the date object
+
+  switch (newDate.getDay()) {
+    case 1: // Monday
+      return newDate;
+    case 2: // Tuesday
+      return new Date(newDate.setDate(newDate.getDate() - 1));
+    case 3: // Wednesday
+      return new Date(newDate.setDate(newDate.getDate() - 2));
+    case 4: // Thursday
+      return new Date(newDate.setDate(newDate.getDate() - 3));
+    case 5: // Friday
+      return new Date(newDate.setDate(newDate.getDate() - 4));
+    case 6: // Saturday
+      return new Date(newDate.setDate(newDate.getDate() - 5));
+    case 0: // Sunday
+      return new Date(newDate.setDate(newDate.getDate() - 6));
+  }
 }

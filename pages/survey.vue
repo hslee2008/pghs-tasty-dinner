@@ -152,6 +152,7 @@ onMounted(() => {
   const today = new Date();
   const bef = getTheLastMonday(today)
 
+
   date.value = formatDate(today).slice(0, 10);
   theMondayDateBefore.value = formatDate(bef).slice(0, 10);
   nameOfTheDay.value = ["일", "월", "화", "수", "목", "금", "토"][
