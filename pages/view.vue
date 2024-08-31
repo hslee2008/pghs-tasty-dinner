@@ -8,10 +8,10 @@
     <v-card
       elevation="0"
       v-if="
-        nameOfTheDay === 'monday' ||
-        nameOfTheDay === 'tuesday' ||
-        nameOfTheDay === 'thursday' ||
-        nameOfTheDay === 'friday'
+        nameOfTheDay === '월' ||
+        nameOfTheDay === '화' ||
+        nameOfTheDay === '목' ||
+        nameOfTheDay === '금'
       "
     >
       <v-card-title class="text-center">오늘 메뉴</v-card-title>
