@@ -227,7 +227,7 @@ const submit = () => {
     if (snapshot.exists()) {
       set(todaysRating, snapshot.val() + today.value);
     } else {
-      set(todaysRating, 1);
+      set(todaysRating, today.value);
     }
   });
 };

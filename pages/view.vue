@@ -47,6 +47,7 @@
           "
         >
           <v-progress-linear
+            rounded-bar
             :model-value="convertToPercentage(divide(total[i], people))"
           ></v-progress-linear>
           <p>
@@ -73,7 +74,8 @@
             :style="
               Object.values(surveyResult ?? {}).map((v) => v.today)[i] <= 2
                 ? 'color: red'
-                : Object.values(surveyResult ?? {}).map((v) => v.today)[i] <= 3.5
+                : Object.values(surveyResult ?? {}).map((v) => v.today)[i] <=
+                  3.5
                 ? 'color: #c76e00'
                 : 'color: green'
             "
@@ -84,6 +86,7 @@
                 Object.values(surveyResult ?? {}).map((v) => v.today)[i]
               "
               readonly
+              half-increments
             ></v-rating>
           </v-list-item>
         </v-list>

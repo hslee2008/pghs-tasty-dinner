@@ -15,9 +15,7 @@
     "@vite-pwa/nuxt": "^0.9.1",
     "@vueuse/core": "^10.11.0",
     "firebase": "^10.12.3",
-    "freegptjs": "^0.0.2",
     "nuxt": "^3.12.3",
-    "openai": "^4.52.7",
     "vue": "^3.4.32",
     "vue-router": "^4.4.0",
     "vuetify-nuxt-module": "^0.15.1"
