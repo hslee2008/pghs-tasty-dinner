@@ -29,6 +29,9 @@
               :size="40"
               active-color="green-darken-2"
               class="px-4"
+              empty-icon="mdi-food-apple-outline"
+              full-icon="mdi-apple"
+              half-increments
             />
           </div>
         </div>
@@ -40,7 +43,7 @@
         <v-card-title>메뉴별 만족도를 평가해주세요</v-card-title>
         <div v-for="(menu, i) in todayMenu.split('\n')" :key="menu">
           <v-card-text class="text-center">
-            {{ menu }} ({{ rated[i] }}점)
+            {{ menu }} ({{ rated[i] ?? 0 }}점)
           </v-card-text>
 
           <div class="d-flex justify-center">
@@ -50,6 +53,7 @@
               :size="40"
               active-color="green-darken-2"
               class="px-4"
+              half-increments
             />
           </div>
         </div>
@@ -77,8 +81,7 @@
             @click="submit"
             :disabled="
               !suggestion ||
-              rated.includes(0) ||
-              rated.length < todayMenu.split('\n').length ||
+              rated.filter((el) => el !== null).length !== rated.length ||
               today === 0 ||
               todayMenu === ''
             "
@@ -201,6 +204,17 @@ const submit = () => {
       set(peopleRef, 1);
     }
   });
+
+  const todaysRating = dbRef($db, `survey/${date.value}/todaysRating`);
+  get(todaysRating).then((snapshot) => {
+    if (snapshot.exists()) {
+      set(todaysRating, snapshot.val() + today.value);
+    } else {
+      set(todaysRating, 1);
+    }
+  });
+
+
 };
 
 const closeDialog = () => {
