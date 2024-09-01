@@ -35,7 +35,17 @@
 
       <v-card-title class="text-center">오늘 메뉴</v-card-title>
       <v-card-text>
-        <div v-for="(m, i) in menu" :key="m">
+        <div
+          v-for="(m, i) in menu"
+          :key="m"
+          :style="
+            convertToPercentage(divide(total[i], people)) <= 30
+              ? 'color: red'
+              : convertToPercentage(divide(total[i], people)) <= 70
+              ? 'color: #c76e00'
+              : 'color: green'
+          "
+        >
           <v-progress-linear
             :model-value="convertToPercentage(divide(total[i], people))"
           ></v-progress-linear>
@@ -59,12 +69,16 @@
             )"
             :key="s"
             border="md"
+            class="mb-2 rounded-lg"
+            :style="
+              Object.values(surveyResult ?? {}).map((v) => v.today)[i] <= 2
+                ? 'color: red'
+                : Object.values(surveyResult ?? {}).map((v) => v.today)[i] <= 3.5
+                ? 'color: #c76e00'
+                : 'color: green'
+            "
           >
-            <template v-slot:prepend>
-              <v-icon icon="mdi-account"></v-icon>
-            </template>
-
-            <v-list-item-title class="ml-3 mt-3">"{{ s }}"</v-list-item-title>
+            <p class="ml-3 mt-3">"{{ s }}"</p>
             <v-rating
               :model-value="
                 Object.values(surveyResult ?? {}).map((v) => v.today)[i]
@@ -98,7 +112,6 @@
 </template>
 
 <script setup>
-import { get } from "firebase/database";
 const date = ref("");
 const menu = ref([]);
 const total = ref([]);
@@ -110,7 +123,10 @@ const surveyResult = ref("");
 const { $db } = useNuxtApp();
 
 onMounted(() => {
-  const today = new Date();
+  const today =
+    process.env.NODE_ENV == "development"
+      ? new Date(getTheLastMonday(new Date()))
+      : new Date();
   date.value = formatDate(today).slice(0, 10);
 
   nameOfTheDay.value = [
@@ -124,14 +140,14 @@ onMounted(() => {
   ][today.getDay()];
 
   const todayRef = dbRef($db, `menu/${date.value}/${nameOfTheDay.value}`);
-  get(todayRef).then((snapshot) => {
+  onValue(todayRef, (snapshot) => {
     if (snapshot.exists()) {
       menu.value = snapshot.val().split("\n");
     }
   });
 
   const surveyResultRef = dbRef($db, `survey/${date.value}`);
-  get(surveyResultRef).then((snapshot) => {
+  onValue(surveyResultRef, (snapshot) => {
     if (snapshot.exists()) {
       surveyResult.value = snapshot.val();
 
@@ -142,21 +158,21 @@ onMounted(() => {
   });
 
   const totalRef = dbRef($db, `survey/${date.value}/totalRating`);
-  get(totalRef).then((snapshot) => {
+  onValue(totalRef, (snapshot) => {
     if (snapshot.exists()) {
       total.value = snapshot.val();
     }
   });
 
   const peopleRef = dbRef($db, `survey/${date.value}/people`);
-  get(peopleRef).then((snapshot) => {
+  onValue(peopleRef, (snapshot) => {
     if (snapshot.exists()) {
       people.value = snapshot.val();
     }
   });
 
   const todaysRatingRef = dbRef($db, `survey/${date.value}/todaysRating`);
-  get(todaysRatingRef).then((snapshot) => {
+  onValue(todaysRatingRef, (snapshot) => {
     if (snapshot.exists()) {
       todaysRating.value = snapshot.val();
     }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card variant="tonal" class="mt-6">
-      <v-card-title> 메뉴 입력하기 </v-card-title>
+      <v-card-title class="text-center"> 석식 메뉴 입력하기 </v-card-title>
     </v-card>
 
     <v-textarea
@@ -69,11 +69,7 @@ const refresh = () => {
 
 onMounted(() => {
   const today = new Date();
-  const nextMonday = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate() + ((2 + 7 - today.getDay()) % 7)
-  );
+  const nextMonday = getTheLastMonday(today);
 
   date.value.monday = formatDate(nextMonday).slice(0, 10);
   date.value.tuesday = formatDate(

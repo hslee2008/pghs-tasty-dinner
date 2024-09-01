@@ -75,13 +75,12 @@
 
         <br />
 
-        <div class="d-flex justify-center">
+        <div class="d-flex justify-center mx-2">
           <v-btn
             color="primary"
             block
             @click="submit"
             :disabled="
-              !suggestion ||
               rated.filter((el) => el !== null).length !== rated.length ||
               today === 0 ||
               todayMenu === ''
@@ -164,7 +163,10 @@ const reset = () => {
 };
 
 onMounted(() => {
-  const today = new Date();
+  const today =
+    process.env.NODE_ENV == "development"
+      ? new Date(getTheLastMonday(new Date()))
+      : new Date();
   const bef = getTheLastMonday(today);
 
   date.value = formatDate(today).slice(0, 10);
