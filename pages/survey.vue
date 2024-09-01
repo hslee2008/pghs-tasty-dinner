@@ -69,6 +69,7 @@
             placeholder="먹고 싶은 메뉴가 있으시면 적어주세요"
             variant="outlined"
             rows="3"
+            class="mx-3"
           ></v-textarea>
         </div>
 
@@ -110,9 +111,23 @@
       </v-dialog>
     </div>
     <div v-else>
-      <v-card elevation="0">
-        <v-card-title class="text-center">오늘은 석식이 없습니다</v-card-title>
-      </v-card>
+      <v-empty-state
+        image="https://vuetifyjs.b-cdn.net/docs/images/components/v-empty-state/astro-dog.svg"
+      >
+        <template v-slot:media>
+          <v-img class="mb-8"></v-img>
+        </template>
+
+        <template v-slot:title>
+          <div class="text-h6 text-high-emphasis">오늘은 석식이 없습니다.</div>
+        </template>
+
+        <template v-slot:text>
+          <div class="text-body-1">
+            월, 화, 목, 금요일을 제외하고는 판교고에서 석식을 받지 않습니다.
+          </div>
+        </template>
+      </v-empty-state>
     </div>
   </div>
 </template>
@@ -213,8 +228,6 @@ const submit = () => {
       set(todaysRating, 1);
     }
   });
-
-
 };
 
 const closeDialog = () => {
