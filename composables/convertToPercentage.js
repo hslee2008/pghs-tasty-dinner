@@ -1,3 +1,3 @@
 export default function convertToPercentage(averageRating) {
-  return averageRating * 100 / 5;
+  return Math.round((averageRating * 100) / 5 * 100) / 100;
 }

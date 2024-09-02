@@ -28,7 +28,9 @@
           half-increments
           readonly
         ></v-rating>
-        <div class="px-3">{{ people }}명 참여</div>
+        <div class="px-3">
+          {{ people }}명({{ divide(people, 74) * 100 }}%) 참여
+        </div>
       </div>
 
       <br />
@@ -36,23 +38,26 @@
       <v-card-title class="text-center">오늘 메뉴</v-card-title>
       <v-card-text>
         <div
-          v-for="(m, i) in menu"
-          :key="m"
+          v-for="(item, i) in sortedMenu"
+          :key="item.name"
           :style="
-            convertToPercentage(divide(total[i], people)) <= 30
+            item.percentage <= 30
               ? 'color: red'
-              : convertToPercentage(divide(total[i], people)) <= 70
-              ? 'color: #c76e00'
-              : 'color: green'
+              : item.percentage <= 40
+              ? 'color: #ff8c00'
+              : item.percentage <= 45
+              ? 'color: #2e8b57'
+              : item.percentage <= 80
+              ? 'color: #4169e1'
+              : 'color: daa520'
           "
         >
           <v-progress-linear
             rounded-bar
-            :model-value="convertToPercentage(divide(total[i], people))"
+            :model-value="item.percentage"
           ></v-progress-linear>
           <p>
-            <b>{{ m }}</b> (만족도:
-            {{ convertToPercentage(divide(total[i], people)) }}%)
+            <b>{{ item.name }}</b> (만족도: {{ item.percentage }}%)
           </p>
 
           <br />
@@ -61,33 +66,42 @@
 
       <br />
 
+      
       <v-card-title class="text-center">추천 보기</v-card-title>
       <v-card-text>
         <v-list>
           <v-list-item
-            v-for="(s, i) in Object.values(surveyResult ?? {}).map(
-              (v) => v.suggestion
-            )"
+            v-for="(s, i) in Object.values(surveyResult ?? {})
+              .sort((a, b) => a.today - b.today)
+              .map((v) => v.suggestion)"
             :key="s"
+            v-show="s"
             border="md"
             class="mb-2 rounded-lg"
             :style="
-              Object.values(surveyResult ?? {}).map((v) => v.today)[i] <= 2
+              Object.values(surveyResult ?? {})
+                .sort((a, b) => a.today - b.today)
+                .map((v) => v.today)[i] <= 2
                 ? 'color: red'
-                : Object.values(surveyResult ?? {}).map((v) => v.today)[i] <=
-                  3.5
+                : Object.values(surveyResult ?? {})
+                    .sort((a, b) => a.today - b.today)
+                    .map((v) => v.today)[i] <= 3.5
                 ? 'color: #c76e00'
                 : 'color: green'
             "
           >
-            <p class="ml-3 mt-3">"{{ s }}"</p>
-            <v-rating
-              :model-value="
-                Object.values(surveyResult ?? {}).map((v) => v.today)[i]
-              "
-              readonly
-              half-increments
-            ></v-rating>
+            <div class="text-center">
+              <p class="ml-3 mt-3">"{{ s }}"</p>
+              <v-rating
+                :model-value="
+                  Object.values(surveyResult ?? {})
+                    .sort((a, b) => a.today - b.today)
+                    .map((v) => v.today)[i]
+                "
+                readonly
+                half-increments
+              ></v-rating>
+            </div>
           </v-list-item>
         </v-list>
       </v-card-text>
@@ -115,15 +129,24 @@
 </template>
 
 <script setup>
-const date = ref("");
+import { ref, computed, onMounted } from 'vue';
+
+const date = ref('');
 const menu = ref([]);
 const total = ref([]);
-const nameOfTheDay = ref("");
+const nameOfTheDay = ref('');
 const people = ref(0);
 const todaysRating = ref(0);
-const surveyResult = ref("");
+const surveyResult = ref('');
 
 const { $db } = useNuxtApp();
+
+const sortedMenu = computed(() => {
+  return menu.value.map((item, index) => {
+    const percentage = convertToPercentage(divide(total.value[index], people.value));
+    return { name: item, percentage };
+  }).sort((a, b) => b.percentage - a.percentage);
+});
 
 onMounted(() => {
   const today =
@@ -133,19 +156,19 @@ onMounted(() => {
   date.value = formatDate(today).slice(0, 10);
 
   nameOfTheDay.value = [
-    "sunday",
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturay",
+    'sunday',
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturay',
   ][today.getDay()];
 
   const todayRef = dbRef($db, `menu/${date.value}/${nameOfTheDay.value}`);
   onValue(todayRef, (snapshot) => {
     if (snapshot.exists()) {
-      menu.value = snapshot.val().split("\n");
+      menu.value = snapshot.val().split('\n');
     }
   });
 
@@ -154,9 +177,9 @@ onMounted(() => {
     if (snapshot.exists()) {
       surveyResult.value = snapshot.val();
 
-      delete surveyResult.value["people"];
-      delete surveyResult.value["todaysRating"];
-      delete surveyResult.value["totalRating"];
+      delete surveyResult.value['people'];
+      delete surveyResult.value['todaysRating'];
+      delete surveyResult.value['totalRating'];
     }
   });
 
