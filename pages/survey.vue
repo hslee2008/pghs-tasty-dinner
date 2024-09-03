@@ -112,14 +112,12 @@
           </v-dialog>
         </div>
         <div v-else>
-          <div class="d-flex justify-center align-center mt-10">
-            <v-progress-circular
-              indeterminate
-              :size="100"
-              :width="15"
-              color="primary"
-            ></v-progress-circular>
-          </div>
+          <v-skeleton-loader
+            class="mx-auto"
+            elevation="12"
+            max-width="400"
+            type="table-heading, list-item-three-line, list-item-three-line, list-item-three-line"
+          ></v-skeleton-loader>
         </div>
       </div>
       <div v-else>
@@ -131,14 +129,16 @@
           </template>
 
           <template v-slot:title>
-            <div class="text-h6 text-high-emphasis">오늘은 이미 평가하셨습니다.</div>
+            <div class="text-h6 text-high-emphasis">
+              오늘은 이미 평가하셨습니다.
+            </div>
           </template>
 
           <template v-slot:text>
             <div class="text-body-1">
               이미 평가하셨습니다. 다른 사람의 의견이 궁금하시다면
-              <NuxtLink to="/view" style="color: #6298d4">결과 보기</NuxtLink
-              >를 누르세요
+              <NuxtLink to="/view" style="color: #6298d4">결과 보기</NuxtLink>를
+              누르세요
             </div>
           </template>
         </v-empty-state>

@@ -15,7 +15,7 @@
         nameOfTheDay === 'friday'
       "
     >
-      <v-card elevation="0">
+      <v-card v-if="!loading" elevation="0">
         <div class="d-flex align-center flex-column my-auto">
           <div class="text-h2 mt-5">
             {{ divide(todaysRating, people) }}
@@ -103,6 +103,14 @@
           </v-list>
         </v-card-text>
       </v-card>
+      <div v-else>
+        <v-skeleton-loader
+          class="mx-auto"
+          elevation="12"
+          max-width="400"
+          type="table-heading, list-item-three-line, list-item-three-line, list-item-three-line"
+        ></v-skeleton-loader>
+      </div>
     </div>
     <div v-else>
       <v-empty-state
@@ -136,6 +144,7 @@ const nameOfTheDay = ref("");
 const people = ref(0);
 const todaysRating = ref(0);
 const surveyResult = ref("");
+const loading = ref(true);
 
 const { $db } = useNuxtApp();
 
@@ -207,6 +216,8 @@ onMounted(() => {
   onValue(todaysRatingRef, (snapshot) => {
     if (snapshot.exists()) {
       todaysRating.value = snapshot.val();
+
+      loading.value = false;
     }
   });
 });
