@@ -129,6 +129,12 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 
+const route = useRoute();
+
+const year = route.query.year;
+const month = route.query.month;
+const day = route.query.date;
+
 const date = ref("");
 const menu = ref([]);
 const total = ref([]);
@@ -151,10 +157,7 @@ const sortedMenu = computed(() => {
 });
 
 onMounted(() => {
-  const today =
-    process.env.NODE_ENV == "development"
-      ? new Date(getTheLastMonday(new Date()))
-      : new Date();
+  const today = new Date(`${parseInt(year)}-${parseInt(month)}-${parseInt(day)}`);
   const bef = getTheLastMonday(today);
   date.value = formatDate(today).slice(0, 10);
 
