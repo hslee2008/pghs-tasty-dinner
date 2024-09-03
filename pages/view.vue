@@ -7,8 +7,7 @@
 
     <br />
 
-    <v-card
-      elevation="0"
+    <div
       v-if="
         nameOfTheDay === 'monday' ||
         nameOfTheDay === 'tuesday' ||
@@ -16,95 +15,105 @@
         nameOfTheDay === 'friday'
       "
     >
-      <div class="d-flex align-center flex-column my-auto">
-        <div class="text-h2 mt-5">
-          {{ divide(todaysRating, people) }}
-          <span class="text-h6 ml-n3">/5</span>
+      <v-card v-if="todaysRating" elevation="0">
+        <div class="d-flex align-center flex-column my-auto">
+          <div class="text-h2 mt-5">
+            {{ divide(todaysRating, people) }}
+            <span class="text-h6 ml-n3">/5</span>
+          </div>
+
+          <v-rating
+            :model-value="divide(todaysRating, people)"
+            color="yellow-darken-3"
+            half-increments
+            readonly
+          ></v-rating>
+          <div class="px-3">
+            {{ people }}명({{ divide(people, 74) * 100 }}%) 참여
+          </div>
         </div>
 
-        <v-rating
-          :model-value="divide(todaysRating, people)"
-          color="yellow-darken-3"
-          half-increments
-          readonly
-        ></v-rating>
-        <div class="px-3">
-          {{ people }}명({{ divide(people, 74) * 100 }}%) 참여
-        </div>
-      </div>
+        <br />
 
-      <br />
-
-      <v-card-title class="text-center">오늘 메뉴</v-card-title>
-      <v-card-text>
-        <div
-          v-for="(item, i) in sortedMenu"
-          :key="item.name"
-          :style="
-            item.percentage <= 30
-              ? 'color: red'
-              : item.percentage <= 40
-              ? 'color: #ff8c00'
-              : item.percentage <= 45
-              ? 'color: #2e8b57'
-              : item.percentage <= 80
-              ? 'color: #4169e1'
-              : 'color: daa520'
-          "
-        >
-          <v-progress-linear
-            rounded-bar
-            :model-value="item.percentage"
-          ></v-progress-linear>
-          <p>
-            <b>{{ item.name }}</b> (만족도: {{ item.percentage }}%)
-          </p>
-
-          <br />
-        </div>
-      </v-card-text>
-
-      <br />
-
-      <v-card-title class="text-center">추천 보기</v-card-title>
-      <v-card-text>
-        <v-list>
-          <v-list-item
-            v-for="(s, i) in Object.values(surveyResult ?? {})
-              .sort((a, b) => a.today - b.today)
-              .map((v) => v.suggestion)"
-            :key="s"
-            v-show="s"
-            border="md"
-            class="mb-2 rounded-lg"
+        <v-card-title class="text-center">오늘 메뉴</v-card-title>
+        <v-card-text>
+          <div
+            v-for="(item, i) in sortedMenu"
+            :key="item.name"
             :style="
-              Object.values(surveyResult ?? {})
-                .sort((a, b) => a.today - b.today)
-                .map((v) => v.today)[i] <= 2
+              item.percentage <= 30
                 ? 'color: red'
-                : Object.values(surveyResult ?? {})
-                    .sort((a, b) => a.today - b.today)
-                    .map((v) => v.today)[i] <= 3.5
-                ? 'color: #c76e00'
-                : 'color: green'
+                : item.percentage <= 40
+                ? 'color: #ff8c00'
+                : item.percentage <= 45
+                ? 'color: #2e8b57'
+                : 'color: #4169e1'
             "
           >
-            <div class="text-center">
-              <p class="ml-3 mt-3">"{{ s }}"</p>
-              <v-rating
-                :model-value="
-                  Object.values(surveyResult ?? {})
-                    .sort((a, b) => a.today - b.today)
-                    .map((v) => v.today)[i]
-                "
-                readonly
-                half-increments
-              ></v-rating>
-            </div>
-          </v-list-item>
-        </v-list>
-      </v-card-text>
-    </v-card>
+            <v-progress-linear
+              rounded-bar
+              :model-value="item.percentage"
+            ></v-progress-linear>
+            <p>
+              <b>{{ item.name }}</b> (만족도: {{ item.percentage }}%)
+            </p>
+
+            <br />
+          </div>
+        </v-card-text>
+
+        <br />
+
+        <v-card-title class="text-center">추천 보기</v-card-title>
+        <v-card-text>
+          <v-list>
+            <v-list-item
+              v-for="(s, i) in Object.values(surveyResult ?? {})
+                .sort((a, b) => a.today - b.today)
+                .map((v) => v.suggestion)"
+              :key="s"
+              v-show="s"
+              border="md"
+              class="mb-2 rounded-lg"
+              :style="
+                Object.values(surveyResult ?? {})
+                  .sort((a, b) => a.today - b.today)
+                  .map((v) => v.today)[i] <= 2
+                  ? 'color: red'
+                  : Object.values(surveyResult ?? {})
+                      .sort((a, b) => a.today - b.today)
+                      .map((v) => v.today)[i] <= 3.5
+                  ? 'color: #c76e00'
+                  : 'color: green'
+              "
+            >
+              <div class="text-center">
+                <p class="ml-3 mt-3">"{{ s }}"</p>
+                <v-rating
+                  :model-value="
+                    Object.values(surveyResult ?? {})
+                      .sort((a, b) => a.today - b.today)
+                      .map((v) => v.today)[i]
+                  "
+                  readonly
+                  half-increments
+                ></v-rating>
+              </div>
+            </v-list-item>
+          </v-list>
+        </v-card-text>
+      </v-card>
+      <div v-else class="mt-10">
+        <div class="d-flex justify-center align-center">
+          <v-progress-circular
+            indeterminate
+            :size="100"
+            :width="15"
+            color="primary"
+          ></v-progress-circular>
+        </div>
+      </div>
+    </div>
     <div v-else>
       <v-empty-state
         image="https://vuetifyjs.b-cdn.net/docs/images/components/v-empty-state/astro-dog.svg"
@@ -174,7 +183,6 @@ onMounted(() => {
     `menu/${getTheLastMonday(date.value)}/${nameOfTheDay.value}`
   );
   onValue(todayRef, (snapshot) => {
-    console.log(`menu/${getTheLastMonday(date.value)}/${nameOfTheDay.value}`);
     if (snapshot.exists()) {
       menu.value = snapshot.val().split("\n");
     }

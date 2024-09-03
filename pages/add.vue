@@ -69,7 +69,7 @@ const refresh = () => {
 
 onMounted(() => {
   const today = new Date();
-  const nextMonday = getTheLastMonday(today);
+  const nextMonday = new Date(getTheLastMonday(today));
 
   date.value.monday = formatDate(nextMonday).slice(0, 10);
   date.value.tuesday = formatDate(
