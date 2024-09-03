@@ -66,7 +66,6 @@
 
       <br />
 
-      
       <v-card-title class="text-center">추천 보기</v-card-title>
       <v-card-text>
         <v-list>
@@ -129,23 +128,27 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted } from "vue";
 
-const date = ref('');
+const date = ref("");
 const menu = ref([]);
 const total = ref([]);
-const nameOfTheDay = ref('');
+const nameOfTheDay = ref("");
 const people = ref(0);
 const todaysRating = ref(0);
-const surveyResult = ref('');
+const surveyResult = ref("");
 
 const { $db } = useNuxtApp();
 
 const sortedMenu = computed(() => {
-  return menu.value.map((item, index) => {
-    const percentage = convertToPercentage(divide(total.value[index], people.value));
-    return { name: item, percentage };
-  }).sort((a, b) => b.percentage - a.percentage);
+  return menu.value
+    .map((item, index) => {
+      const percentage = convertToPercentage(
+        divide(total.value[index], people.value)
+      );
+      return { name: item, percentage };
+    })
+    .sort((a, b) => b.percentage - a.percentage);
 });
 
 onMounted(() => {
@@ -153,22 +156,27 @@ onMounted(() => {
     process.env.NODE_ENV == "development"
       ? new Date(getTheLastMonday(new Date()))
       : new Date();
+  const bef = getTheLastMonday(today);
   date.value = formatDate(today).slice(0, 10);
 
   nameOfTheDay.value = [
-    'sunday',
-    'monday',
-    'tuesday',
-    'wednesday',
-    'thursday',
-    'friday',
-    'saturay',
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturay",
   ][today.getDay()];
 
-  const todayRef = dbRef($db, `menu/${date.value}/${nameOfTheDay.value}`);
+  const todayRef = dbRef(
+    $db,
+    `menu/${getTheLastMonday(date.value)}/${nameOfTheDay.value}`
+  );
   onValue(todayRef, (snapshot) => {
+    console.log(`menu/${getTheLastMonday(date.value)}/${nameOfTheDay.value}`);
     if (snapshot.exists()) {
-      menu.value = snapshot.val().split('\n');
+      menu.value = snapshot.val().split("\n");
     }
   });
 
@@ -177,9 +185,9 @@ onMounted(() => {
     if (snapshot.exists()) {
       surveyResult.value = snapshot.val();
 
-      delete surveyResult.value['people'];
-      delete surveyResult.value['todaysRating'];
-      delete surveyResult.value['totalRating'];
+      delete surveyResult.value["people"];
+      delete surveyResult.value["todaysRating"];
+      delete surveyResult.value["totalRating"];
     }
   });
 

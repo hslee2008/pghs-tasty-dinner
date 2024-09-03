@@ -3,18 +3,18 @@ export default function getTheLastMonday(date) {
 
   switch (newDate.getDay()) {
     case 1: // Monday
-      return newDate;
+      return formatDate(newDate)
     case 2: // Tuesday
-      return new Date(newDate.setDate(newDate.getDate() - 1));
+      return formatDate(new Date(newDate.setDate(newDate.getDate() - 1)))
     case 3: // Wednesday
-      return new Date(newDate.setDate(newDate.getDate() - 2));
+      return formatDate(new Date(newDate.setDate(newDate.getDate() - 2)))
     case 4: // Thursday
-      return new Date(newDate.setDate(newDate.getDate() - 3));
+      return formatDate(new Date(newDate.setDate(newDate.getDate() - 3)))
     case 5: // Friday
-      return new Date(newDate.setDate(newDate.getDate() - 4));
+      return formatDate(new Date(newDate.setDate(newDate.getDate() - 4)))
     case 6: // Saturday
-      return new Date(newDate.setDate(newDate.getDate() - 5));
+      return formatDate(new Date(newDate.setDate(newDate.getDate() - 5)))
     case 0: // Sunday
-      return new Date(newDate.setDate(newDate.getDate() - 6));
+      return formatDate(new Date(newDate.setDate(newDate.getDate() - 6)))
   }
 }
